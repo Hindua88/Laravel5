@@ -17,5 +17,4 @@ class Egg {
         $this->image = '/imgs/egg.png';
         $this->type = $type;
     }
-
 } 

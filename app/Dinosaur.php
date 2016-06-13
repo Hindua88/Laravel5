@@ -14,28 +14,23 @@ class Dinosaur extends Animal
 
     public function go()
     {
-        $steps = $this->getMoveSteps();
-        $step = Common::getRandomInArray($steps);
-        $this->world->moveAnimal($this, $step['x'], $step['y']);
+        $this->world->moveAnimal($this, $this->newX, $this->newY);
     }
 
     public function eat()
     {
-        $steps = $this->getMoveSteps();
-        $coordinate = array();
-        foreach ($steps as $step) {
-            $cell = $this->world->getDataCell($step['x'], $step['y']);
-            if ($cell) {
-                $coordinate = $cell;
-                break;
-            }
+        $data = $this->world->getDataCell($this->newX, $this->newY);
+        if ($data) {
+            return true;
         }
 
-        return $coordinate;
+        return false;
     }
 
     public function born()
     {
+        $egg = new Egg($this->type);
+        $this->world->addEgg($egg, $this->newX, $this->newY);
     }
 
     public function isDie()
@@ -49,11 +44,14 @@ class Dinosaur extends Animal
 
     public function action()
     {
+        $steps = $this->getMoveSteps();
+        $step = Common::getRandomInArray($steps);
+        $this->newX = $step['x'];
+        $this->newY = $step['y'];
         // eat
-        $coordinate = $this->eat();
-        if ($coordinate) {
+        if ($this->eat()) {
             $this->step = 0;
-            $this->world->moveAnimal($this, $coordinate['x'], $coordinate['y']);
+            $this->world->moveAnimal($this, $this->newX, $this->newY);
             return;
         } else {
             $this->step ++;

@@ -34,9 +34,13 @@ class World
         $animals = array();
         for ($i = 0; $i < $this->n; $i ++) {
             for ($j = 0; $j < $this->m; $j ++) {
-                $animal = $this->getDataCell($i, $j);
-                if ($animal) {
-                    $animals[] = $animal;
+                $obj = $this->getDataCell($i, $j);
+                if ($obj) {
+                    if ($obj instanceof Egg) {
+                        // nothing
+                    } else {
+                        $animals[] = $obj;
+                    }
                 }
             }
         }

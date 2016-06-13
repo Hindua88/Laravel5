@@ -12,6 +12,8 @@ class Animal implements IAnimal
     public $type;
     public $world;
     public $step = 0;
+    public $newX;
+    public $newY;
     
     public function go()
     {
