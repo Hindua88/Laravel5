@@ -21,6 +21,7 @@ class Dinosaur extends Animal
     {
         $data = $this->world->getDataCell($this->newX, $this->newY);
         if ($data) {
+            $this->world->moveAnimal($this, $this->newX, $this->newY);
             return true;
         }
 
@@ -45,13 +46,15 @@ class Dinosaur extends Animal
     public function action()
     {
         $steps = $this->getMoveSteps();
+        if (empty($steps)) {
+            return;
+        }
         $step = Common::getRandomInArray($steps);
         $this->newX = $step['x'];
         $this->newY = $step['y'];
         // eat
         if ($this->eat()) {
             $this->step = 0;
-            $this->world->moveAnimal($this, $this->newX, $this->newY);
             return;
         } else {
             $this->step ++;

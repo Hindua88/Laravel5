@@ -46,7 +46,7 @@
         <div class="container">
             <div class="content">
                 <div class="title">Animal</div>
-                <?php $count = 1; ?>
+                <?php $count = 0; ?>
                 <?php foreach ($world->histories as $history): ?>
                     <div "step">
                         <h3>Step <?php echo $count ++ ?></h3>
