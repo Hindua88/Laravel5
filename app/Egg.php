@@ -30,13 +30,13 @@ class Egg {
         // born animal
         if ($this->type == Common::TYPE_DINOSAUR) {
             $dinosaur = new Dinosaur();
-            $this->world->updateAnimal($dinosaur, $this->x, $this->y);
+            $this->world->growAnimalFromEgg($dinosaur, $this->x, $this->y);
         } elseif ($this->type == Common::TYPE_FALCON) {
             $falcon = new Falcon();
-            $this->world->updateAnimal($falcon, $this->x, $this->y);
+            $this->world->growAnimalFromEgg($falcon, $this->x, $this->y);
         } elseif ($this->type == Common::TYPE_CHICKEN) {
             $chicken = new Chicken(); 
-            $this->world->updateAnimal($chicken, $this->x, $this->y);
+            $this->world->growAnimalFromEgg($chicken, $this->x, $this->y);
         }
     }
 } 

@@ -30,11 +30,11 @@ class UserController extends Controller
         $this->world->addAnimal($dinosaur, $coordinate['x'], $coordinate['y']);
 
         // add falcon
-//        for ($i = 0; $i < 2; $i ++) {
-//            $coordinate = $this->world->randomEmptyPosition();
-//            $falcon = new Falcon();
-//            $this->world->addAnimal($falcon, $coordinate['x'], $coordinate['y']);
-//        }
+        for ($i = 0; $i < 2; $i ++) {
+            $coordinate = $this->world->randomEmptyPosition();
+            $falcon = new Falcon();
+            $this->world->addAnimal($falcon, $coordinate['x'], $coordinate['y']);
+        }
 
         // add chicken
         for ($i = 0; $i < 4; $i ++) {

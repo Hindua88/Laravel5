@@ -21,6 +21,7 @@ class Dinosaur extends Animal
     {
         $data = $this->world->getDataCell($this->newX, $this->newY);
         if ($data) {
+            $this->world->writeInfoLog("Animal {$this->name} ate {$data->name}!");
             $this->world->moveAnimal($this, $this->newX, $this->newY);
             return true;
         }
@@ -31,12 +32,14 @@ class Dinosaur extends Animal
     public function born()
     {
         $egg = new Egg($this->type);
+        $this->world->writeInfoLog("Animal {$this->name} was born {$egg->name} with position ({$this->newX}, {$this->newY})");
         $this->world->addEgg($egg, $this->newX, $this->newY);
     }
 
     public function isDie()
     {
         if ($this->step >= 6) {
+            $this->world->writeInfoLog("Animal {$this->name} was died");
             return true;
         }
 
@@ -77,20 +80,28 @@ class Dinosaur extends Animal
         $result = array();
         $x = $this->x;
         $y = $this->y;
+        $positions = array();
         if ($x > 0) {
-            $result[] = array('x' => $x - 1, 'y' => $y);
+            $positions[] = array('x' => $x - 1, 'y' => $y);
         }
         if ($x < $this->world->n - 1) {
-            $result[] = array('x' => $x + 1, 'y' => $y);
+            $positions[] = array('x' => $x + 1, 'y' => $y);
         } 
         if ($y > 0) {
-            $result[] = array('x' => $x, 'y' => $y - 1);
+            $positions[] = array('x' => $x, 'y' => $y - 1);
         }
         if ($y < $this->world->m - 1) {
-            $result[] = array('x' => $x, 'y' => $y + 1);
+            $positions[] = array('x' => $x, 'y' => $y + 1);
         } 
+        // filter
+        foreach ($positions as $step) {
+            $data = $this->world->getDataCell($step['x'], $step['y']);
+            if ($data && $data->type == $this->type) { // the same type animal
+                continue;
+            }
+            $result[] = $step;
+        }
         
         return $result;
     }
-
 }

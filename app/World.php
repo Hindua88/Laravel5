@@ -61,9 +61,13 @@ class World
         }
 
         $result = array();
+        $this->writeInfoLog("==> Total animal " . count($animals));
         if (count($animals) > 1) {
             // random indexes
             $indexes = array_rand($animals, count($animals) - 1);
+            if (! is_array($indexes)) {
+                $indexes = (array) $indexes;
+            }
             foreach ($indexes as $index) {
                 $item = $animals[$index];
                 $result[] = $item;
@@ -139,11 +143,11 @@ class World
         }
     }
 
-    public function updateAnimal(Animal &$animal, $x, $y)
+    public function growAnimalFromEgg(Animal &$animal, $x, $y)
     {
         $position = $x . '_' . $y;
         if (array_key_exists($position, $this->data)) {
-            $this->writeInfoLog("Update {$animal->name} to position ({$x}, {$y})");
+            $this->writeInfoLog("Grow Animal {$animal->name} from egg with position ({$x}, {$y})");
             $animal->world = $this;
             $animal->x = $x;
             $animal->y = $y;

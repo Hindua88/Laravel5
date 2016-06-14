@@ -20,7 +20,8 @@ class Falcon extends Animal
     public function eat()
     {
         $data = $this->world->getDataCell($this->newX, $this->newY);
-        if ($data instanceof Egg) {
+        if ($data) {
+            $this->world->writeInfoLog("Animal {$this->name} ate {$data->name}!");
             $this->world->moveAnimal($this, $this->newX, $this->newY);
             return true;
         }
@@ -31,19 +32,14 @@ class Falcon extends Animal
     public function born()
     {
         $egg = new Egg($this->type);
+        $this->world->writeInfoLog("Animal {$this->name} was born {$egg->name} with position ({$this->newX}, {$this->newY})");
         $this->world->addEgg($egg, $this->newX, $this->newY);
-        $steps = $this->getMoveSteps();
-        if (empty($steps)) {
-            return;
-        }
-        $step = Common::getRandomInArray($steps);
-        $egg = new Egg($this->type);
-        $this->world->addEgg($egg, $step['x'], $step['y']);
     }
 
     public function isDie()
     {
         if ($this->step >= 4) {
+            $this->world->writeInfoLog("Animal {$this->name} was died");
             return true;
         }
 
@@ -79,33 +75,28 @@ class Falcon extends Animal
         }
     }
 
+
     public function getMoveSteps()
     {
         $result = array();
         $x = $this->x;
         $y = $this->y;
 
-        // The x-axis 
-        for ($i = 0; $i < $this->world->n; $i ++) {
-            if ($x == $i) {
-                continue;
-            }
-            $tmp = $this->world->getDataCell($i, $y);
-            if (empty($tmp) || ! ($tmp instanceof Dinosaur)) {
-                $result[] = array('x' => $i, 'y' => $y);
+        // detect egg or chicken 
+        $animals = $this->world->getAllAnimals();
+        foreach ($animals as $animal) {
+            if ($animal instanceof Egg || $animal instanceof Chicken) {
+                $result[] = array('x' => $animal->x, 'y' => $animal->y);
+                break;
             }
         }
-        // The y-axis 
-        for ($i = 0; $i < $this->world->m; $i ++) {
-            if ($y == $i) {
-                continue;
-            }
-            $tmp = $this->world->getDataCell($x, $i);
-            if (empty($tmp) || ! ($tmp instanceof Dinosaur)) {
-                $result[] = array('x' => $x, 'y' => $i);
-            }
+
+        // Not eat => get random position in map
+        $coordinate = $this->world->randomEmptyPosition();
+        if ($coordinate) {
+            $result[] = array('x' => $coordinate['x'], 'y' => $coordinate['y']);
         }
-        
+
         return $result;
     }
 
