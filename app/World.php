@@ -8,8 +8,8 @@ class World
     public $m; 
     public $data = array();
     public $animals = array();
-    public $is_active;
     public $histories = array();
+    public $logger;
 
     public function __construct($n, $m)
     {
@@ -29,6 +29,20 @@ class World
         }
     }
 
+    public function setLogger($logger)
+    {
+        if ($logger) {
+            $this->logger = $logger;
+        }
+    }
+
+    public function writeInfoLog($text)
+    {
+        if ($this->logger) {
+            $this->logger->info($text);
+        }
+    }
+
     public function getAllAnimals()
     {
         $animals = array();
@@ -36,36 +50,76 @@ class World
             for ($j = 0; $j < $this->m; $j ++) {
                 $obj = $this->getDataCell($i, $j);
                 if ($obj) {
-                    if ($obj instanceof Egg) {
-                        // nothing
-                    } else {
-                        $animals[] = $obj;
-                    }
+//                    if ($obj instanceof Egg) {
+//                        // nothing
+//                    } else {
+//                        $animals[] = $obj;
+//                    }
+                    $animals[] = $obj;
                 }
             }
         }
 
-        return $animals;
+        $result = array();
+        if (count($animals) > 1) {
+            // random indexes
+            $indexes = array_rand($animals, count($animals) - 1);
+            foreach ($indexes as $index) {
+                $item = $animals[$index];
+                $result[] = $item;
+                unset($animals[$index]);
+            }
+            foreach ($animals as $item) {
+                $result[] = $item;
+            }
+        } else {
+            $result = $animals;
+        }
+
+        return $result;
+    }
+
+    private function getNumberTypeAnimal($animals)
+    {
+        $result = array(); 
+        foreach ($animals as $animal) {
+            $type = $animal->type;
+            if ($animal instanceof Egg) {
+                continue;
+            }
+            if (! in_array($type, $result)) {
+                $result[] = $type;
+            }
+        }
+
+        return count($result);
     }
 
     public function start()
     {
-        for ($i = 0; $i < 100; $i ++) {
+        $this->writeInfoLog("START WORLD");
+        $this->histories[] = $this->data;
+        for ($i = 0; $i < 500; $i ++) {
+            $count = $i + 1;
+            $this->writeInfoLog("======== STEP {$count} =========");
             $this->histories[] = $this->data;
             $this->animals = $this->getAllAnimals();
-            if (count($this->animals) <= 0) {
+            $number_type = $this->getNumberTypeAnimal($this->animals);
+            if ($number_type <= 1) { // only animal (except egg) => exit
                 break;
             }
             foreach ($this->animals as $animal) {
                 $animal->action();
             }
         }
+        $this->writeInfoLog("END WORLD");
     }
 
     public function addEgg(Egg &$egg, $x, $y)
     {
         $position = $x . '_' . $y;
         if (array_key_exists($position, $this->data)) {
+            $this->writeInfoLog("Add {$egg->name} to position ({$x}, {$y})");
             $egg->world = $this;
             $egg->x = $x;
             $egg->y = $y;
@@ -77,6 +131,19 @@ class World
     {
         $position = $x . '_' . $y;
         if (array_key_exists($position, $this->data)) {
+            $this->writeInfoLog("Add {$animal->name} to position ({$x}, {$y})");
+            $animal->world = $this;
+            $animal->x = $x;
+            $animal->y = $y;
+            $this->data[$position] = $animal; 
+        }
+    }
+
+    public function updateAnimal(Animal &$animal, $x, $y)
+    {
+        $position = $x . '_' . $y;
+        if (array_key_exists($position, $this->data)) {
+            $this->writeInfoLog("Update {$animal->name} to position ({$x}, {$y})");
             $animal->world = $this;
             $animal->x = $x;
             $animal->y = $y;
@@ -88,6 +155,7 @@ class World
     {
         $position = $animal->x . '_' . $animal->y;
         if (array_key_exists($position, $this->data)) {
+            $this->writeInfoLog("Remove {$animal->name} with position ({$animal->x}, {$animal->y})");
             $this->data[$position] = null;
         }
     }
@@ -97,6 +165,7 @@ class World
         $position = $animal->x . '_' . $animal->y;
         $newPosition = $newX . '_' . $newY;
         if (array_key_exists($position, $this->data) && array_key_exists($newPosition, $this->data)) {
+            $this->writeInfoLog("Move {$animal->name} from ({$animal->x}, {$animal->y}) to ({$newX}, {$newY})");
             $animal->x = $newX; 
             $animal->y = $newY;
             $this->data[$newPosition] = $this->data[$position]; 

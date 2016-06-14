@@ -51,8 +51,15 @@
                     <div "step">
                         <h3>Step <?php echo $count ++ ?></h3>
                         <table class="table_step">
+                            <tr>
+                                <td width="<?php echo $cell_width; ?>" height="<?php echo $cell_height; ?>" >x/y</td>
+                                <?php for ($i = 0; $i < $world->m; $i ++): ?>
+                                    <td width="<?php echo $cell_width; ?>" height="<?php echo $cell_height; ?>" ><?php echo $i ?></td>
+                                <?php endfor ?>
+                            </tr>
                             <?php for ($i = 0; $i < $world->m; $i ++): ?>
                                 <tr>
+                                    <td><?php echo $i ?></td>
                                 <?php for ($j = 0; $j < $world->n; $j ++): ?>
                                     <td width="<?php echo $cell_width; ?>" height="<?php echo $cell_height; ?>" >
                                         <?php $key = $i . '_' . $j; ?>
