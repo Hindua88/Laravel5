@@ -9,6 +9,7 @@ interface IAnimal {
     public function born();
     public function isDie();
     public function action();
-    public function getMoveSteps();
+    public function getNextSteps();
+    public function getEmptyNextSteps();
 
 }

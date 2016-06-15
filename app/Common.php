@@ -7,6 +7,7 @@ class Common {
     const TYPE_DINOSAUR = 1;
     const TYPE_FALCON = 2;
     const TYPE_CHICKEN = 3;
+    const MAX_STEP = 100;
 
     public static function getRandomInArray($array = array())
     {

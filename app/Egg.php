@@ -10,6 +10,17 @@ class Egg {
     public $image;
     public $type;
     public $world;
+    protected $is_die = false;
+
+    public function setIsDie($bool = true)
+    {
+        $this->is_die = $bool;
+    }
+
+    public function isDie()
+    {
+        return $this->is_die;
+    }
 
     public function __construct($type)
     {
@@ -27,6 +38,10 @@ class Egg {
 
     public function action()
     {
+        if ($this->isDie()) {
+            $this->world->writeInfoLog("{$this->name} ({$this->x}, {$this->y}) was died");
+            return;
+        }
         // born animal
         if ($this->type == Common::TYPE_DINOSAUR) {
             $dinosaur = new Dinosaur();

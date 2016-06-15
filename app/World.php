@@ -102,8 +102,7 @@ class World
     public function start()
     {
         $this->writeInfoLog("START WORLD");
-        $this->histories[] = $this->data;
-        for ($i = 0; $i < 500; $i ++) {
+        for ($i = 0; $i < Common::MAX_STEP; $i ++) {
             $count = $i + 1;
             $this->writeInfoLog("======== STEP {$count} =========");
             $this->histories[] = $this->data;
@@ -155,10 +154,11 @@ class World
         }
     }
 
-    public function removeAnimal(Animal $animal)
+    public function removeAnimal(Animal &$animal)
     {
         $position = $animal->x . '_' . $animal->y;
         if (array_key_exists($position, $this->data)) {
+            $animal->setIsDie(true);
             $this->writeInfoLog("Remove {$animal->name} with position ({$animal->x}, {$animal->y})");
             $this->data[$position] = null;
         }
@@ -169,11 +169,13 @@ class World
         $position = $animal->x . '_' . $animal->y;
         $newPosition = $newX . '_' . $newY;
         if (array_key_exists($position, $this->data) && array_key_exists($newPosition, $this->data)) {
-            $this->writeInfoLog("Move {$animal->name} from ({$animal->x}, {$animal->y}) to ({$newX}, {$newY})");
+            $this->writeInfoLog("Move animal {$animal->name} from ({$animal->x}, {$animal->y}) to ({$newX}, {$newY})");
             $animal->x = $newX; 
             $animal->y = $newY;
             $this->data[$newPosition] = $this->data[$position]; 
             $this->data[$position] = null;
+        } else {
+            $this->writeInfoLog("Don't move");
         }
     }
 
@@ -215,5 +217,4 @@ class World
 
         return $result; 
     }
-
 }

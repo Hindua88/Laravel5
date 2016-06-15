@@ -19,10 +19,6 @@ class UserController extends Controller
 
     private function addAnmials()
     {
-        // add egg dinosaur
-//        $coordinate = $this->world->randomEmptyPosition();
-//        $egg = new Egg(Common::TYPE_DINOSAUR);
-//        $this->world->addEgg($egg, $coordinate['x'], $coordinate['y']);
 
         // add dinosaur
         $dinosaur = new Dinosaur();

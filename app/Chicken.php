@@ -2,7 +2,7 @@
 
 namespace App;
 
-class Chicken extends Animal
+class Chicken extends Animal implements IAnimal
 {
 
     public function __construct()
@@ -12,53 +12,37 @@ class Chicken extends Animal
         $this->type = Common::TYPE_CHICKEN;
     }
 
-    public function go()
-    {
-        $this->world->moveAnimal($this, $this->newX, $this->newY);
-    }
-
-    public function eat()
-    {
-        $data = $this->world->getDataCell($this->newX, $this->newY);
-        if ($data instanceof Egg) {
-            $this->world->moveAnimal($this, $this->newX, $this->newY);
-            return true;
-        }
-
-        return false;
-    }
-
     public function born()
     {
-        $egg = new Egg($this->type);
-        $this->world->addEgg($egg, $this->newX, $this->newY);
-        $steps = $this->getMoveSteps();
-        if (empty($steps)) {
-            return;
+        for ($i = 0; $i < 2; $i ++) {
+            parent::born();
         }
-        $step = Common::getRandomInArray($steps);
-        $egg = new Egg($this->type);
-        $this->world->addEgg($egg, $step['x'], $step['y']);
     }
 
     public function isDie()
     {
         if ($this->step >= 3) {
-            return true;
+            $this->setIsDie(true);
         }
 
-        return false;
+        return $this->is_die;
     }
 
     public function action()
     {
-        $steps = $this->getMoveSteps();
-        if (empty($steps)) {
+        if ($this->isDie()) {
+            $this->world->writeInfoLog("Animal {$this->name} ({$this->x}, {$this->y}) was died");
             return;
         }
-        $step = Common::getRandomInArray($steps);
-        $this->newX = $step['x'];
-        $this->newY = $step['y'];
+        $this->world->writeInfoLog("Animal {$this->name} ({$this->x}, {$this->y}) action with number step: {$this->step}!");
+        $next_steps = $this->getNextSteps();
+        if (empty($next_steps)) { // idle
+            $this->step ++;
+            return;
+        }
+        $next_step = Common::getRandomInArray($next_steps);
+        $this->newX = $next_step['x'];
+        $this->newY = $next_step['y'];
         // eat
         if ($this->eat()) {
             $this->step = 0;
@@ -79,7 +63,7 @@ class Chicken extends Animal
         }
     }
 
-    public function getMoveSteps()
+    public function getNextSteps()
     {
         $result = array();
         $x = $this->x;
@@ -109,4 +93,33 @@ class Chicken extends Animal
         return $result;
     }
 
+    public function getEmptyNextSteps()
+    {
+        $result = array();
+        $x = $this->x;
+        $y = $this->y;
+
+        // The x-axis 
+        for ($i = 0; $i < $this->world->n; $i ++) {
+            if ($x == $i) {
+                continue;
+            }
+            $tmp = $this->world->getDataCell($i, $y);
+            if (empty($tmp)) {
+                $result[] = array('x' => $i, 'y' => $y);
+            }
+        }
+        // The y-axis 
+        for ($i = 0; $i < $this->world->m; $i ++) {
+            if ($y == $i) {
+                continue;
+            }
+            $tmp = $this->world->getDataCell($x, $i);
+            if (empty($tmp)) {
+                $result[] = array('x' => $x, 'y' => $i);
+            }
+        }
+        
+        return $result;
+    }
 }
