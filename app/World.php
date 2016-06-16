@@ -43,6 +43,9 @@ class World
         }
     }
 
+    /*
+     * Get all animal and egg
+     */
     public function getAllAnimals()
     {
         $animals = array();
@@ -50,11 +53,6 @@ class World
             for ($j = 0; $j < $this->m; $j ++) {
                 $obj = $this->getDataCell($i, $j);
                 if ($obj) {
-//                    if ($obj instanceof Egg) {
-//                        // nothing
-//                    } else {
-//                        $animals[] = $obj;
-//                    }
                     $animals[] = $obj;
                 }
             }

@@ -13,6 +13,7 @@ use App\Egg;
 use App\Common;
 use App\Logger;
 
+
 class UserController extends Controller
 {
     private $world;
@@ -40,6 +41,7 @@ class UserController extends Controller
         }
     }
 
+    // TO DO: This is example and use public property and public method. Please use private or protected for both property and method to make good program.
     public function main()
     {
 //        $this->world = new World(16, 16);
