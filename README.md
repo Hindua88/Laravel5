@@ -22,8 +22,13 @@ B4. Open browser and go http://animal.vn/user to see result
 
 == MAIN CLASSES ==
 1. Dinosaur
+
 2. Falcon
+
 3. Chicken
+
 4. Egg
+
 5. Logger
+
 6. World
