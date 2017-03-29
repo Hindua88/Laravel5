@@ -58,4 +58,8 @@ class UserController extends Controller
             'cell_height' => 36,
             ]);
     }
+
+    public function test() {
+        var_dump(1);
+    }
 }
