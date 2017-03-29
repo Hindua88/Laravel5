@@ -44,8 +44,7 @@ class UserController extends Controller
     // TO DO: This is example and use public property and public method. Please use private or protected for both property and method to make good program.
     public function main()
     {
-//        $this->world = new World(16, 16);
-        $this->world = new World(8, 8);
+        $this->world = new World(16, 16);
         $logger = new Logger('/tmp/animal.log', Logger::DEBUG);
         $this->world->setLogger($logger);
         $this->world->writeInfoLog("INIT WORLD");
